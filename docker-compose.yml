@@ -1,0 +1,114 @@
+networks:
+  todo-net:
+    driver: bridge
+    name: todo-net
+
+services:
+  postgres:
+    container_name: postgres_todo
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: database
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - todo-net
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_todo
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
+    ports:
+      - "5050:80"
+    networks:
+      - todo-net
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    volumes:
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_INSTALL_PLUGINS=redis-datasource
+    ports:
+      - "3000:3000"
+    networks:
+      todo-net:
+
+  tempo:
+    container_name: tempo
+    image: grafana/tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./docker/tempo/tempo.yaml:/etc/tempo.yaml
+    ports:
+      - "3200:3200"
+      - "9411:9411" # Consume spans
+    networks:
+      todo-net:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Маппинг для Linux
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail
+    command: [ "-config.file=/etc/promtail/promtail.yml" ]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/promtail/promtail.yml:/etc/promtail/promtail.yml
+    networks:
+      todo-net:
+
+  loki:
+    container_name: loki
+    image: grafana/loki
+    command: "-config.file=/etc/loki/local-config.yaml"
+    environment:
+      - JAEGER_AGENT_HOST=tempo
+      - JAEGER_ENDPOINT=http://tempo:14268/api/traces
+      - JAEGER_SAMPLER_TYPE=const
+      - JAEGER_SAMPLER_PARAM=1
+    networks:
+      - todo-net
+    ports:
+      - "3100:3100" # Consume logs
+#    depends_on:
+#      - promtail
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/rule_files/:/etc/prometheus/rule_files/
+    ports:
+      - "9090:9090"
+    networks:
+      todo-net:
+    depends_on:
+      - grafana
+
+volumes:
+  postgres:
+  pgadmin:
+

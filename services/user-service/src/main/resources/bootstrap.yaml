@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/database
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000    # Таймаут получения соединения (мс)
+      maximum-pool-size: 10        # Максимальный размер пула
+      minimum-idle: 2             # Минимальное количество idle-соединений
+      idle-timeout: 600000        # Макс время бездействия соединения (мс)
+      max-lifetime: 1800000       # Макс время жизни соединения (мс)
+      pool-name: MyHikariPool     # Имя пула для мониторинга
+      auto-commit: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  cloud:
+    config:
+      uri: http://localhost:8080
+      fail-fast: true
+
+  batch:
+    jdbc:
+      initialize-schema: always
+      table-prefix: BATCH_
+
+server:
+  port: 8081
+  forward-headers-strategy: framework
+

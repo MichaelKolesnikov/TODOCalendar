@@ -1,0 +1,29 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Автоматическое создание маршрутов по именам сервисов в Eureka
+          lower-case-service-id: true
+      # experimental routes
+      routes:
+        - id: some-route
+          uri: https://eovzthv9v3ucgql.m.pipedream.net
+          predicates:
+            - Path=/endpoint
+          filters:
+            - AddRequestHeader=X-My-Header, MyHeaderValue
+        - id: some-second-route
+          uri: https://eovzthv9v3ucgql.m.pipedream.net
+          predicates:
+            - Path=/endpoint/{*segments}
+          filters:
+            - AddRequestHeader=X-Path, {segments}
+    config:
+      uri: http://localhost:8080
+      fail-fast: true
