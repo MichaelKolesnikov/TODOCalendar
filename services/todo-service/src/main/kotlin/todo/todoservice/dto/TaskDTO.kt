@@ -1,4 +1,4 @@
-package todo.userservice.dto
+package todo.todoservice.dto
 
 import java.time.LocalDateTime
 

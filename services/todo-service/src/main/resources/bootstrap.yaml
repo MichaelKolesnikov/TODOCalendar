@@ -33,6 +33,10 @@ spring:
       initialize-schema: always
       table-prefix: BATCH_
 
+  mvc:
+    format:
+      date-time: yyyy-MM-dd'T'HH:mm
+
 server:
   port: 8082
   forward-headers-strategy: framework

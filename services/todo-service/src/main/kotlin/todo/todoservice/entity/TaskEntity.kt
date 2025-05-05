@@ -13,8 +13,8 @@ data class TaskEntity(
     @JoinColumn(name = "theme_id")
     val theme: ThemeEntity,
 
-    @Enumerated(EnumType.STRING)
-    val priority: Priority,
+    @Column(nullable = false)
+    val priority: Long,
 
     @Column(nullable = false)
     val userId: Long,

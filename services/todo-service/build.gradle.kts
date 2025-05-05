@@ -23,12 +23,10 @@ extra["springCloudVersion"] = "2024.0.1"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 
     // Spring Cloud Config Server
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
