@@ -10,24 +10,6 @@ datasources:
     version: 1
     editable: true
 
-  - name: Redis
-    type: redis-datasource
-    access: proxy
-    idDefault: false
-    editable: true
-    url: redis://redis:6379
-    uid: redisdatasource
-#  - name: Prometheus
-#    type: prometheus
-#    access: proxy
-#    url: http://prometheus:9090
-#    editable: false
-#    jsonData:
-#      httpMethod: POST
-#      exemplarTraceIdDestinations:
-#        - name: trace_id
-#          datasourceUid: tempo
-#
   - name: Tempo
     type: tempo
     access: proxy
