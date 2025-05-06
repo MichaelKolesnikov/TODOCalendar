@@ -11,7 +11,6 @@ import todo.todoservice.repository.ThemeRepository
 @Observed(name = "TaskService")
 class TaskService(
     private val taskRepository: TaskRepository,
-    private val themeRepository: ThemeRepository,
 ) {
     fun createTask(task: TaskEntity): Boolean {
         try {
@@ -25,10 +24,5 @@ class TaskService(
 
     fun getAllUserTasks(userId: Long): List<TaskEntity> {
         return taskRepository.findTaskEntitiesByUserId(userId)
-    }
-
-    fun findOrCreateTheme(themeName: String, userId: Long): ThemeEntity {
-        return themeRepository.findByNameAndUserId(themeName, userId)
-            ?: themeRepository.save(ThemeEntity(name = themeName, userId = userId))
     }
 }

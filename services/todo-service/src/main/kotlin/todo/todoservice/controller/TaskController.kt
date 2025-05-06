@@ -7,17 +7,18 @@ import org.springframework.web.bind.annotation.*
 import todo.todoservice.dto.TaskDTO
 import todo.todoservice.entity.TaskEntity
 import todo.todoservice.service.TaskService
+import todo.todoservice.service.ThemeService
 
 @RestController
 @RequestMapping("/task")
 @Observed(name = "TaskController")
 class TaskController(
     private val taskService: TaskService,
+    private val themeService: ThemeService,
 ) {
     @PostMapping("/create")
     fun createTask(@RequestBody task: TaskDTO): ResponseEntity<Boolean> {
-        // Найти или создать тему
-        val theme = taskService.findOrCreateTheme(task.theme, task.userId)
+        val theme = themeService.findOrCreateTheme(task.theme, task.userId)
 
         val success = taskService.createTask(TaskEntity(
             title = task.title,

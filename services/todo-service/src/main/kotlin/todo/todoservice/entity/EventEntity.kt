@@ -23,8 +23,8 @@ data class EventEntity(
     val reminder: LocalDateTime? = null,
 
     @Column(nullable = false)
-    val startTime: LocalDateTime,
+    val startTime: LocalDateTime? = null,
 
     @Column(nullable = false)
-    val endTime: LocalDateTime,
+    val endTime: LocalDateTime? = null,
 ) : AbstractEntity()
