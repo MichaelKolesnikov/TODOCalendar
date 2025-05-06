@@ -44,6 +44,16 @@ class UserController(
         return "home"
     }
 
+    @GetMapping("/new-task")
+    fun newTask(): String {
+        return "new-task"
+    }
+
+    @GetMapping("/new-event")
+    fun newEvent(model: Model): String {
+        return "new-event"
+    }
+
     @GetMapping("/calendar")
     fun calendarPage(
         @AuthenticationPrincipal userDetails: UserDetails,
