@@ -2,32 +2,106 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Calendar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Добавим к существующим стилям */
-        .calendar-day.empty {
-            background-color: #f9f9f9;
+        /* Общие стили из home.html */
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-        .day-number {
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        body {
+            background-color: #f5f5f5;
+            padding: 2rem;
         }
-        .month-header {
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Стили календаря */
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem 0;
+        }
+
+        .calendar-nav button {
+            padding: 0.75rem 1.5rem;
+            background-color: #4fc3f7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .calendar-nav button:hover {
+            background-color: #3da8d6;
+        }
+
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .calendar-table th,
+        .calendar-table td {
+            padding: 1rem;
             text-align: center;
-            font-size: 1.5rem;
-            margin: 1rem 0;
+            border: 1px solid #eee;
+        }
+
+        .calendar-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
         }
 
         .calendar-day {
-            padding: 10px;
-            border: 1px solid #eee;
             vertical-align: top;
-            width: 14.28%;
-            height: 100px;
+            height: 120px;
+            transition: background-color 0.2s;
         }
 
-        .calendar-day:hover {
+        .calendar-day.empty {
+            background-color: #f9f9f9;
+            color: #999;
+        }
+
+        .calendar-day:hover:not(.empty) {
             background-color: #f8f9fa;
             cursor: pointer;
+        }
+
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
         }
 
         .priority-marker {
@@ -39,11 +113,46 @@
         }
 
         /* Цвета приоритетов */
-        .priority-1 { background-color: #e0e0e0; }
-        .priority-2 { background-color: #b3e5fc; }
-        .priority-3 { background-color: #4fc3f7; }
-        .priority-4 { background-color: #ffb74d; }
-        .priority-5 { background-color: #ff5252; }
+        .priority-1 { background-color: #e0e0e0 !important; }
+        .priority-2 { background-color: #b3e5fc !important; }
+        .priority-3 { background-color: #4fc3f7 !important; }
+        .priority-4 { background-color: #ffb74d !important; }
+        .priority-5 { background-color: #ff5252 !important; }
+
+        /* Стили кнопок из home.html */
+        .logout-btn {
+            background-color: #e74c3c;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .calendar-btn {
+            background-color: #4CAF50;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .calendar-btn:hover {
+            background-color: #45a049;
+        }
+
+        #monthHeader {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
