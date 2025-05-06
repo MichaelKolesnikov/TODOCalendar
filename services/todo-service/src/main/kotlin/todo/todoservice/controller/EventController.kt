@@ -50,7 +50,7 @@ class EventController(
                 userId = it.userId,
                 reminder = it.reminder,
                 startTime = it.startTime,
-                endTime = it.startTime
+                endTime = it.endTime
             )
         }
         return ResponseEntity(dtoList, HttpStatus.OK)
