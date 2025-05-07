@@ -157,6 +157,7 @@
                 <th>Title</th>
                 <th>Theme</th>
                 <th>Reminder</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -164,17 +165,25 @@
             <tr th:each="task : ${tasks}">
                 <td>
                     <div th:classappend="'priority-' + ${task.priority}"
-                         class="time-cell"
-                         th:text="${#temporals.format(task.deadline, 'dd.MM.yyyy HH:mm')}">
+                         class="time-cell">
+                    <input type="datetime-local" name="deadline"
+                           th:value="${task.deadline != null} ? ${#temporals.format(task.deadline, 'yyyy-MM-dd''T''HH:mm')} : ''" disabled/>
                     </div>
                 </td>
                 <td>Task</td>
                 <td th:text="${task.title}"></td>
                 <td th:text="${task.theme}"></td>
                 <td>
-                        <span th:if="${task.reminder != null}"
-                              th:text="${#temporals.format(task.reminder, 'dd.MM.yyyy HH:mm')}">
+                        <span th:if="${task.reminder != null}">
+                    <input type="datetime-local" name="reminder"
+                           th:value="${task.reminder != null} ? ${#temporals.format(task.reminder, 'yyyy-MM-dd''T''HH:mm')} : ''" disabled/>
                         </span>
+                </td>
+                <td>
+                    <a th:href="@{/task/edit/{id}(id=${task.id})}" class="edit-btn">Edit</a>
+                    <form th:action="@{/task/delete/{id}(id=${task.id})}" method="post" style="display: inline;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    </form>
                 </td>
             </tr>
 
@@ -182,17 +191,26 @@
             <tr th:each="event : ${events}">
                 <td>
                     <div th:classappend="'priority-' + ${event.priority}" class="time-cell">
-                        <span th:text="${#temporals.format(event.startTime, 'dd.MM.yyyy HH:mm')}"></span> -
-                        <span th:text="${#temporals.format(event.endTime, 'dd.MM.yyyy HH:mm')}"></span>
+
+                        <input type="datetime-local" name="startTime"
+                               th:value="${event.startTime!= null} ? ${#temporals.format(event.startTime, 'yyyy-MM-dd''T''HH:mm')} : ''" disabled/>
+                         -
+                        <input type="datetime-local" name="endTime"
+                               th:value="${event.endTime!= null} ? ${#temporals.format(event.endTime, 'yyyy-MM-dd''T''HH:mm')} : ''" disabled/>
                     </div>
                 </td>
                 <td>Event</td>
                 <td th:text="${event.title}"></td>
                 <td th:text="${event.theme}"></td>
                 <td>
-                        <span th:if="${event.reminder != null}"
-                              th:text="${#temporals.format(event.reminder, 'dd.MM.yyyy HH:mm')}">
-                        </span>
+                    <input type="datetime-local" name="reminder"
+                           th:value="${event.reminder != null} ? ${#temporals.format(event.reminder, 'yyyy-MM-dd''T''HH:mm')} : ''"  disabled/>
+                </td>
+                <td>
+                    <a th:href="@{/event/edit/{id}(id=${event.id})}" class="edit-btn">Edit</a>
+                    <form th:action="@{/event/delete/{id}(id=${event.id})}" method="post" style="display: inline;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    </form>
                 </td>
             </tr>
             </tbody>

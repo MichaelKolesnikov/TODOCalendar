@@ -3,6 +3,8 @@ package todo.todoservice.controller
 import io.micrometer.observation.annotation.Observed
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import todo.todoservice.dto.TaskDTO
 import todo.todoservice.entity.TaskEntity
@@ -36,6 +38,7 @@ class TaskController(
     fun getTasks(@PathVariable userId: Long): ResponseEntity<List<TaskDTO>> {
         val dtoList = taskService.getAllUserTasks(userId).map {
             TaskDTO(
+                id = it.id,
                 title = it.title,
                 theme = it.theme.name,
                 priority = it.priority,
@@ -47,4 +50,25 @@ class TaskController(
         return ResponseEntity(dtoList, HttpStatus.OK)
     }
 
+    @PostMapping("/update/{userId}/{id}")
+    fun updateTask(
+        @PathVariable userId: Long,
+        @PathVariable id: Long,
+    ) {
+        taskService.updateTask(id, userId)
+    }
+
+    @GetMapping("/get/{userId}/{id}")
+    fun getTaskByIdAndUserId(@PathVariable("userId") userId: Long, @PathVariable("id") id: Long): TaskDTO {
+        val it = taskService.getTaskByIdAndUserId(id, userId) ?: return TaskDTO()
+        return TaskDTO(
+            id = it.id,
+            title = it.title,
+            theme = it.theme.name,
+            priority = it.priority,
+            userId = it.userId,
+            reminder = it.reminder,
+            deadline = it.deadline,
+        )
+    }
 }

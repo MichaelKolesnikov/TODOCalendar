@@ -27,6 +27,24 @@ interface TODOService {
 
     @GetMapping("/event/get/{userId}")
     fun getEvents(@PathVariable userId: Long): ResponseEntity<List<EventDTO>>
+
+    @PostMapping("/event/update/{userId}/{id}")
+    fun updateEvent(
+        @PathVariable userId: Long,
+        @PathVariable id: Long,
+    )
+
+    @PostMapping("/task/update/{userId}/{id}")
+    fun updateTask(
+        @PathVariable userId: Long,
+        @PathVariable id: Long,
+    )
+
+    @GetMapping("/event/get/{userId}/{id}")
+    fun getEventByIdAndUserId(@PathVariable("userId") userId: Long, @PathVariable("id") id: Long): EventDTO
+
+    @GetMapping("/task/get/{userId}/{id}")
+    fun getTaskByIdAndUserId(@PathVariable("userId") userId: Long, @PathVariable("id") id: Long): TaskDTO
 }
 
 //@Component

@@ -3,6 +3,7 @@ package todo.todoservice.dto
 import java.time.LocalDateTime
 
 data class TaskDTO(
+    val id: Long = 0,
     val title: String = "",
     val theme: String = "",
     val priority: Long = 3,

@@ -5,4 +5,6 @@ import todo.todoservice.entity.EventEntity
 
 interface EventRepository: JpaRepository<EventEntity, Long> {
     fun findAllByUserId(userId: Long): List<EventEntity>
+
+    fun findEventEntityByIdAndUserId(id: Long, userId: Long): EventEntity?
 }
