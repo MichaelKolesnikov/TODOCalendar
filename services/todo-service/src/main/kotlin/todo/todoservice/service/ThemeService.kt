@@ -11,7 +11,15 @@ class ThemeService(
     private val themeRepository: ThemeRepository
 ) {
     fun findOrCreateTheme(themeName: String, userId: Long): ThemeEntity {
-        return themeRepository.findByNameAndUserId(themeName, userId)
-            ?: themeRepository.save(ThemeEntity(name = themeName, userId = userId))
+        val existingTheme = themeRepository.findByNameAndUserId(themeName, userId)
+        if (existingTheme != null) {
+            return existingTheme
+        }
+
+        val newTheme = ThemeEntity(
+            name = themeName,
+            userId = userId
+        )
+        return themeRepository.save(newTheme)
     }
 }

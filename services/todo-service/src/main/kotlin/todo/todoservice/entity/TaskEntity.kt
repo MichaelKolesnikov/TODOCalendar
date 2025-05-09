@@ -7,21 +7,21 @@ import java.time.LocalDateTime
 @Table(name = "Task")
 data class TaskEntity(
     @Column(nullable = false)
-    val title: String,
+    var title: String,
 
     @ManyToOne
     @JoinColumn(name = "theme_id")
-    val theme: ThemeEntity,
+    var theme: ThemeEntity,
 
     @Column(nullable = false)
-    val priority: Long,
+    var priority: Long,
 
     @Column(nullable = false)
     val userId: Long,
 
     @Column
-    val reminder: LocalDateTime? = null,
+    var reminder: LocalDateTime? = null,
 
     @Column(nullable = false)
-    val deadline: LocalDateTime,
+    var deadline: LocalDateTime,
 ): AbstractEntity()

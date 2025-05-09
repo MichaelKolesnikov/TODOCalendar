@@ -50,12 +50,15 @@ class TaskController(
         return ResponseEntity(dtoList, HttpStatus.OK)
     }
 
-    @PostMapping("/update/{userId}/{id}")
+    @PostMapping("/update")
     fun updateTask(
-        @PathVariable userId: Long,
-        @PathVariable id: Long,
+        @RequestBody taskDTO: TaskDTO,
     ) {
-        taskService.updateTask(id, userId)
+        taskService.updateTask(taskDTO)
+    }
+    @DeleteMapping("/{id}")
+    fun deleteTask(@PathVariable("id") id: Long) {
+        taskService.deleteTask(id)
     }
 
     @GetMapping("/get/{userId}/{id}")

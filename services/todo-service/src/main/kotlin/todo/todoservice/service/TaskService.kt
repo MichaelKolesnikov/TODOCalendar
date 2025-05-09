@@ -2,8 +2,9 @@ package todo.todoservice.service
 
 import io.micrometer.observation.annotation.Observed
 import jakarta.persistence.EntityNotFoundException
-import org.springframework.scheduling.config.Task
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import todo.todoservice.dto.TaskDTO
 import todo.todoservice.entity.TaskEntity
 import todo.todoservice.repository.TaskRepository
 
@@ -11,6 +12,7 @@ import todo.todoservice.repository.TaskRepository
 @Observed(name = "TaskService")
 class TaskService(
     private val taskRepository: TaskRepository,
+    private val themeService: ThemeService,
 ) {
     fun createTask(task: TaskEntity): Boolean {
         try {
@@ -22,6 +24,10 @@ class TaskService(
         return true
     }
 
+    fun deleteTask(id: Long) {
+        taskRepository.deleteById(id)
+    }
+
     fun getAllUserTasks(userId: Long): List<TaskEntity> {
         return taskRepository.findTaskEntitiesByUserId(userId)
     }
@@ -30,9 +36,15 @@ class TaskService(
         return taskRepository.findTaskByIdAndUserId(id, userId)
     }
 
-    fun updateTask(id: Long, userId: Long) {
-        val task = taskRepository.findTaskByIdAndUserId(id, userId)
-            ?: throw EntityNotFoundException("Task not found")
+    fun updateTask(taskDTO: TaskDTO) {
+        val theme = themeService.findOrCreateTheme(taskDTO.theme, taskDTO.userId)
+
+        val task = taskRepository.findByIdOrNull(taskDTO.id) ?: throw EntityNotFoundException()
+        task.title = taskDTO.title
+        task.theme = theme
+        task.priority = taskDTO.priority
+        task.reminder = taskDTO.reminder
+        task.deadline = taskDTO.deadline
 
         taskRepository.save(task)
     }

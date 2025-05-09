@@ -44,68 +44,6 @@ class UserController(
         return "home"
     }
 
-    @GetMapping("/new-task")
-    fun newTask(): String = "new-task"
-
-    @GetMapping("/new-event")
-    fun newEvent(): String = "new-event"
-
-
-    @GetMapping("/task/edit/{id}")
-    fun editTaskForm(
-        @PathVariable("id") id: Long,
-        model: Model,
-        @AuthenticationPrincipal userDetails: UserDetails
-    ): String {
-        val user = authService.findByUsername(userDetails.username) ?: return "redirect:/login"
-        val task = todoService.getTaskByIdAndUserId(user.id, id) ?: return "redirect:/home"
-        model.addAttribute("task", task)
-        return "edit-task"
-    }
-
-    @PostMapping("/task/update/{id}")
-    fun updateTask(
-        @PathVariable("id") id: Long,
-        @ModelAttribute taskDTO: TaskDTO,
-        bindingResult: BindingResult,
-        @AuthenticationPrincipal userDetails: UserDetails
-    ): String {
-        if (bindingResult.hasErrors()) {
-            return "edit-task"
-        }
-        val user = authService.findByUsername(userDetails.username) ?: return "redirect:/login"
-        todoService.updateTask(id, user.id)
-        return "redirect:/home"
-    }
-
-    @GetMapping("/event/edit/{id}")
-    fun editEventForm(
-        @PathVariable("id") id: Long,
-        model: Model,
-        @AuthenticationPrincipal userDetails: UserDetails
-    ): String {
-        val user = authService.findByUsername(userDetails.username) ?: return "redirect:/login"
-        val event = todoService.getEventByIdAndUserId(user.id, id) ?: return "redirect:/home"
-        model.addAttribute("event", event)
-        return "edit-event"
-    }
-
-    @PostMapping("/event/update/{id}")
-    fun updateEvent(
-        @PathVariable("id") id: Long,
-        @ModelAttribute eventDTO: EventDTO,
-        bindingResult: BindingResult,
-        @AuthenticationPrincipal userDetails: UserDetails
-    ): String {
-        if (bindingResult.hasErrors()) {
-            return "edit-event"
-        }
-        val user = authService.findByUsername(userDetails.username) ?: return "redirect:/login"
-        todoService.updateEvent(id, user.id)
-        return "redirect:/home"
-    }
-
-
 
     @GetMapping("/calendar")
     fun calendarPage(
@@ -138,35 +76,5 @@ class UserController(
         model.addAttribute("datePriorities", datePriorityMap)
         model.addAttribute("currentDate", LocalDate.now())
         return "calendar"
-    }
-
-    @PostMapping("/task/create")
-    fun createTask(
-        @ModelAttribute("newTask") task: TaskDTO,
-        bindingResult: BindingResult,
-        @AuthenticationPrincipal userDetails: UserDetails
-    ): String {
-        if (bindingResult.hasErrors()) {
-            return "home" // Вернуться на страницу с ошибками
-        }
-        val user = authService.findByUsername(userDetails.username) ?: return "redirect:/login"
-        task.userId = user.id
-        todoService.createTask(task)
-        return "redirect:/home"
-    }
-
-    @PostMapping("/event/create")
-    fun createEvent(
-        @ModelAttribute("newEvent") eventDTO: EventDTO,
-        bindingResult: BindingResult,
-        @AuthenticationPrincipal userDetails: UserDetails
-    ): String {
-        if (bindingResult.hasErrors()) {
-            return "home" // Вернуться на страницу с ошибками
-        }
-        val user = authService.findByUsername(userDetails.username) ?: return "redirect:/login"
-        eventDTO.userId = user.id
-        todoService.createEvent(eventDTO)
-        return "redirect:/home"
     }
 }

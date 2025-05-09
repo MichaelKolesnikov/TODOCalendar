@@ -59,12 +59,16 @@ class EventController(
         return ResponseEntity(dtoList, HttpStatus.OK)
     }
 
-    @PostMapping("/update/{userId}/{id}")
+    @PostMapping("/update")
     fun updateEvent(
-        @PathVariable userId: Long,
-        @PathVariable id: Long,
+        @RequestBody eventDTO: EventDTO,
     ) {
-        eventService.updateEvent(id, userId)
+        eventService.updateEvent(eventDTO)
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteEventById(@PathVariable("id") id: Long) {
+        eventService.deleteEvent(id)
     }
 
     @GetMapping("/get/{userId}/{id}")

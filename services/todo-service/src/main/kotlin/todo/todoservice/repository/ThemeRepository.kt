@@ -6,5 +6,5 @@ import todo.todoservice.entity.ThemeEntity
 
 @Observed(name = "ThemeRepository")
 interface ThemeRepository: JpaRepository<ThemeEntity, Long> {
-    fun findByNameAndUserId(themeName: String, userId: Long): ThemeEntity?
+    fun findByNameAndUserId(name: String, userId: Long): ThemeEntity?
 }
